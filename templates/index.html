@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head xmlns="http://www.w3.org/1999/xhtml">
+    <meta charset="UTF-8">
+    <title>Baggage</title>
+    <link rel="stylesheet" href="static/css/style.css">
+    <link rel="stylesheet" type="text/css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.0.0/dist/tf.min.js"></script>
+
+</head>
+<body class="bg-dark">
+
+<div class="container">
+    <div class="row">
+        <div class="card mt-50" style="width: 100%; height: 100%">
+            <div class="card-header" style="text-align: center">
+                <div class="col-12" style="text-align: center">
+                    <h1>Welcome to Airline Baggage Prediction</h1>
+            </div>
+                <div class="card-body">
+                    <form method="post" accept-charset="utf-8">
+                        <div class="col-10 form-group" style="text-align:center">
+                        <label><b>select Airline:</b></label>
+                        <select class="selectPicker form-control" id="Airline" name="Airline" required="1">
+                        
+                        {% for Airline in airline %}
+              
+                        
+                        <option value="{{Airline}}">{{Airline}}</option>
+                        {% endfor %}
+                        </select>
+                        </div>
+                        <div class="col-10 form-group" style="text-align:center">
+                        <label><b>select Date:</b></label>
+                        <select class="selectPicker form-control" id="Date" name="Date" required="1">
+                        {% for Date in date %}
+                        <option value="{{Date}}">{{Date}}</option>
+                        {% endfor %}
+                        </select>
+                        </div>
+                        <div class="col-10 form-group" style="text-align:center">
+                        <label><b>select Month:</b></label>
+                        <select class="selectPicker form-control" id="Month" name="Month" required="1">
+                        {% for Month in month %}
+                        <option value="{{Month}}">{{Month}}</option>
+                        {% endfor %}
+                        </select>
+                        </div>
+                        <div class="col-10 form-group" style="text-align:center">
+                        <label><b>select year:</b></label>
+                        <select class="selectPicker form-control" id="Year" name="Year" required="1">
+                        {% for Year in year %}
+                        <option value="{{Year}}">{{Year}}</option>
+                        {% endfor %}
+                        </select>
+                        </div>
+                        <div class="col-10 form-group" style="text-align:center">
+                        <label><b>Enter number of Airlines Scheduled:</b></label>
+                        <input class="form-control" type="text", id="Scheduled" name="Scheduled" reqired="1">
+                        </div>
+                        <div class="col-10 form-group" style="text-align:center">
+                        <label><b>Enter number of Airlines Cancelled:</b></label>
+                        <input class="form-control" type="text", id="Cancelled" name="Cancelled" reqired="1">
+                       
+                        </div>
+                        <div class="col-10 form-group" style="text-align:center">
+                        <label><b>select Enlaped:</b></label>
+                        <input class="form-control" type="text", id="Enplaned" name="Enplaned" reqired="1">
+                        </div>
+                    <div class="col-md-10 form-group" style="text-align: center">
+                        <button  class="btn btn-primary form-control" onclick="send_data()">Predict Complaints</button>
+                    </div>
+                </form>
+                <br>
+                <div class="row">
+                    <div class="col-12" style="text-align: center">
+                        <h4><span id="prediction"></span></h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function form_handler(event) {
+        event.preventDefault(); // Don't submit the form normally
+    }
+    function send_data()
+    {
+        document.querySelector('form').addEventListener("submit",form_handler);
+
+        var fd=new FormData(document.querySelector('form'));
+
+        var xhr= new XMLHttpRequest({mozSystem: true});
+
+        xhr.open('POST','/predict',true);
+        document.getElementById('prediction').innerHTML="Wait! Predicting Complaints.....";
+        xhr.onreadystatechange = function(){
+            if(xhr.readyState == XMLHttpRequest.DONE){
+                document.getElementById('prediction').innerHTML="Prediction: "+xhr.responseText;
+
+            }
+        };
+
+        xhr.onload= function(){};
+
+        xhr.send(fd);
+    }
+</script>
+
+
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
+</body>
+</html>
